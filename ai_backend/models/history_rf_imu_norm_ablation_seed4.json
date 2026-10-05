@@ -1,0 +1,8 @@
+{
+  "best_params": {
+    "max_depth": 20,
+    "n_estimators": 100
+  },
+  "val_mse": 0.663990008449591,
+  "fit_elapsed_s": 1397.0201511383057
+}

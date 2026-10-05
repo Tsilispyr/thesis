@@ -1,0 +1,8 @@
+{
+  "best_params": {
+    "max_depth": null,
+    "max_iter": 100
+  },
+  "val_mse": 0.3591051176122359,
+  "fit_elapsed_s": 25.917392253875732
+}

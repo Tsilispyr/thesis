@@ -1,0 +1,18 @@
+{
+  "random_forest": {
+    "best_params": {
+      "max_depth": 20,
+      "n_estimators": 100
+    },
+    "val_mse": 0.6649596019440491,
+    "fit_elapsed_s": 818.3507342338562
+  },
+  "gbt": {
+    "best_params": {
+      "max_depth": 10,
+      "max_iter": 100
+    },
+    "val_mse": 0.35460727951228876,
+    "fit_elapsed_s": 38.17287993431091
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "tag": "seek",
+  "requested_total_timesteps": 10000,
+  "actual_total_timesteps": 16384,
+  "n_envs": 4,
+  "seed": 0,
+  "elapsed_s": 13.710128545761108,
+  "eval_timesteps": [],
+  "eval_mean_reward": [],
+  "best_mean_reward": 0.2667475999999998
+}
