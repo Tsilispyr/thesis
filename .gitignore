@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────
+#  Python
+# ─────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# ─────────────────────────────────────────────────────────────────────
+#  Large training data - not in git. See DATA.md for provenance and
+#  how to obtain or regenerate each file.
+# ─────────────────────────────────────────────────────────────────────
+datasets/*.csv
+datasets/px4_raw/*.ulg
+
+# ─────────────────────────────────────────────────────────────────────
+#  RandomForest checkpoints - ~980 MB each, 5.9 GB total, regenerable
+#  in minutes via ablation_matrix.py. Every other checkpoint (.pth,
+#  gbt_*.pkl, scalers, PPO .zip) IS tracked.
+# ─────────────────────────────────────────────────────────────────────
+ai_backend/models/rf_*.pkl
+
+# ─────────────────────────────────────────────────────────────────────
+#  Generated documents - the analysis lives in the .md files and in the
+#  thesis PDF; the Word/HTML/PowerPoint renders are build artifacts.
+# ─────────────────────────────────────────────────────────────────────
+*.docx
+*.pptx
+~$*
+runs/analysis_report.docx
+runs/analysis_report.html
+
+# ─────────────────────────────────────────────────────────────────────
+#  Godot editor cache
+# ─────────────────────────────────────────────────────────────────────
+.godot/
+*.import.bak
+
+# ─────────────────────────────────────────────────────────────────────
+#  OS / editor
+# ─────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

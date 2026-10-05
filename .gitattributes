@@ -1,0 +1,12 @@
+# Normalize text line endings in the repo; leave working copies native.
+* text=auto
+
+# Binary assets - never touch these.
+*.pth   binary
+*.pkl   binary
+*.zip   binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.mp4   binary
+*.ulg   binary
