@@ -1,0 +1,215 @@
+Run label: cpu_5seeds
+Logging full console output -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\runs\ablation\cpu_5seeds\full_console_log.txt
+
+=== Ablation Matrix: seeds=[0, 1, 2, 3, 4] epochs=30 sources=('imu',) models=['LSTM', 'SSL-LSTM', 'Transformer', 'SSL-Transformer', 'RandomForest', 'GBT'] quick=False partial=False ===
+
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+EKF              (deterministic)  final=132.47m  mean=66.12m
+Pure Inertial    (deterministic)  final=143.00m  mean=71.39m
+
+--- LSTM, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+LSTM seed 0: reusing cached checkpoint (tag 'imu_norm_ablation_seed0')
+LSTM seed 0: final=30.01m mean=19.62m
+
+--- LSTM, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+LSTM seed 1: reusing cached checkpoint (tag 'imu_norm_ablation_seed1')
+LSTM seed 1: final=29.48m mean=18.74m
+
+--- LSTM, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+LSTM seed 2: reusing cached checkpoint (tag 'imu_norm_ablation_seed2')
+LSTM seed 2: final=35.64m mean=21.67m
+
+--- LSTM, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+LSTM seed 3: reusing cached checkpoint (tag 'imu_norm_ablation_seed3')
+LSTM seed 3: final=28.46m mean=16.87m
+
+--- LSTM, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+LSTM seed 4: reusing cached checkpoint (tag 'imu_norm_ablation_seed4')
+LSTM seed 4: final=24.78m mean=15.86m
+
+LSTM: final=29.68m [24.82, 34.53]  mean=18.55m [15.71, 21.40]  (19.3s for 5 seed(s))
+
+--- SSL-LSTM, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-LSTM seed 0: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed0')
+SSL-LSTM seed 0: final=36.87m mean=22.76m
+
+--- SSL-LSTM, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-LSTM seed 1: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed1')
+SSL-LSTM seed 1: final=37.51m mean=23.39m
+
+--- SSL-LSTM, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-LSTM seed 2: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed2')
+SSL-LSTM seed 2: final=31.92m mean=19.95m
+
+--- SSL-LSTM, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-LSTM seed 3: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed3')
+SSL-LSTM seed 3: final=33.08m mean=20.44m
+
+--- SSL-LSTM, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-LSTM seed 4: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed4')
+SSL-LSTM seed 4: final=33.46m mean=20.70m
+
+SSL-LSTM: final=34.57m [31.50, 37.64]  mean=21.45m [19.55, 23.34]  (19.4s for 5 seed(s))
+
+--- Transformer, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Transformer seed 0: reusing cached checkpoint (tag 'imu_norm_ablation_seed0')
+Transformer seed 0: final=14.17m mean=8.48m
+
+--- Transformer, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Transformer seed 1: reusing cached checkpoint (tag 'imu_norm_ablation_seed1')
+Transformer seed 1: final=3.22m mean=5.87m
+
+--- Transformer, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Transformer seed 2: reusing cached checkpoint (tag 'imu_norm_ablation_seed2')
+Transformer seed 2: final=7.15m mean=7.50m
+
+--- Transformer, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Transformer seed 3: reusing cached checkpoint (tag 'imu_norm_ablation_seed3')
+Transformer seed 3: final=15.04m mean=9.06m
+
+--- Transformer, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Transformer seed 4: reusing cached checkpoint (tag 'imu_norm_ablation_seed4')
+Transformer seed 4: final=5.94m mean=6.30m
+
+Transformer: final=9.10m [2.61, 15.60]  mean=7.44m [5.74, 9.14]  (26.3s for 5 seed(s))
+
+--- SSL-Transformer, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-Transformer seed 0: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed0')
+SSL-Transformer seed 0: final=13.22m mean=9.10m
+
+--- SSL-Transformer, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-Transformer seed 1: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed1')
+SSL-Transformer seed 1: final=11.15m mean=6.69m
+
+--- SSL-Transformer, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-Transformer seed 2: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed2')
+SSL-Transformer seed 2: final=19.80m mean=11.62m
+
+--- SSL-Transformer, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-Transformer seed 3: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed3')
+SSL-Transformer seed 3: final=9.41m mean=7.05m
+
+--- SSL-Transformer, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+SSL-Transformer seed 4: reusing cached checkpoint (tag 'imu_ssl_norm_ablation_seed4')
+SSL-Transformer seed 4: final=16.39m mean=9.35m
+
+SSL-Transformer: final=13.99m [8.83, 19.16]  mean=8.76m [6.29, 11.24]  (25.6s for 5 seed(s))
+
+--- RandomForest, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+RandomForest seed 0: reusing cached checkpoint (tag 'imu_norm_ablation_seed0')
+RandomForest seed 0: final=27.27m mean=17.68m
+
+--- RandomForest, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+RandomForest seed 1: reusing cached checkpoint (tag 'imu_norm_ablation_seed1')
+RandomForest seed 1: final=26.19m mean=17.04m
+
+--- RandomForest, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+RandomForest seed 2: reusing cached checkpoint (tag 'imu_norm_ablation_seed2')
+RandomForest seed 2: final=26.59m mean=17.28m
+
+--- RandomForest, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+RandomForest seed 3: reusing cached checkpoint (tag 'imu_norm_ablation_seed3')
+RandomForest seed 3: final=26.13m mean=17.14m
+
+--- RandomForest, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+RandomForest seed 4: reusing cached checkpoint (tag 'imu_norm_ablation_seed4')
+RandomForest seed 4: final=25.92m mean=17.05m
+
+RandomForest: final=26.42m [25.76, 27.08]  mean=17.24m [16.91, 17.57]  (253.0s for 5 seed(s))
+
+--- GBT, seed 0 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+GBT seed 0: reusing cached checkpoint (tag 'imu_norm_ablation_seed0')
+GBT seed 0: final=18.06m mean=11.66m
+
+--- GBT, seed 1 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+GBT seed 1: reusing cached checkpoint (tag 'imu_norm_ablation_seed1')
+GBT seed 1: final=20.87m mean=13.05m
+
+--- GBT, seed 2 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+GBT seed 2: reusing cached checkpoint (tag 'imu_norm_ablation_seed2')
+GBT seed 2: final=17.27m mean=11.47m
+
+--- GBT, seed 3 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+GBT seed 3: reusing cached checkpoint (tag 'imu_norm_ablation_seed3')
+GBT seed 3: final=18.31m mean=11.90m
+
+--- GBT, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+GBT seed 4: reusing cached checkpoint (tag 'imu_norm_ablation_seed4')
+GBT seed 4: final=18.29m mean=11.72m
+
+GBT: final=18.56m [16.87, 20.24]  mean=11.96m [11.18, 12.74]  (772.7s for 5 seed(s))
+
+Model                  Final err [m]                95% CI    Mean err [m]                95% CI
+EKF                           132.47   n/a (deterministic)           66.12   n/a (deterministic)
+Pure Inertial                 143.00   n/a (deterministic)           71.39   n/a (deterministic)
+LSTM                           29.68        [24.82, 34.53]           18.55        [15.71, 21.40]
+SSL-LSTM                       34.57        [31.50, 37.64]           21.45        [19.55, 23.34]
+Transformer                     9.10         [2.61, 15.60]            7.44          [5.74, 9.14]
+SSL-Transformer                13.99         [8.83, 19.16]            8.76         [6.29, 11.24]
+RandomForest                   26.42        [25.76, 27.08]           17.24        [16.91, 17.57]
+GBT                            18.56        [16.87, 20.24]           11.96        [11.18, 12.74]
+
+Saved figure -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\runs\ablation\cpu_5seeds\ablation_matrix.png
+Saved results -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\runs\ablation\cpu_5seeds\results.json
+Saved README -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\runs\ablation\cpu_5seeds\README.md

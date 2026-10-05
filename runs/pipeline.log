@@ -1,0 +1,1446 @@
+[smoke-test] run_count=1 arcus_files=14
+
+══════════════════════════════════════════════════════════════════════
+  RUN #2  ·  2026-05-20 23:53:43
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=60000
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=  5,000  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  supplemental    rows=    552  cols=22  NaN=4.1%  IMU=✗  GPS=✗
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav  rows:  5,000 ->  5,000  NaN before:   0  after: 0
+  imu  rows: 60,000 -> 60,000  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0884    13.2690     0.0000     1.0000
+  imu_acc_y          -0.0452    13.0320    -0.0000     1.0000
+  imu_acc_z          -0.0141     4.4644     0.0000     1.0000
+  imu_gyro_x          1.2047    30.8272    -0.0000     1.0000
+  imu_gyro_y         -0.0982    30.0222     0.0000     1.0000
+  imu_gyro_z          1.2197    30.8165    -0.0000     1.0000
+  speed              16.4980    10.9911    -0.0000     1.0000
+  wind_speed          0.7725     3.1178    -0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (8): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'speed', 'wind_speed']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_z=0.009, imu_acc_y=0.008, imu_gyro_x=0.005
+    delta_lon: imu_acc_x=0.003, speed=0.002, imu_gyro_z=0.002
+    delta_alt: imu_gyro_x=0.019, wind_speed=0.008, speed=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,990
+  Input shape    : (10, 8)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 5,000 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11030.6029  Val: 12342.9232
+  Epoch [ 2/10]  Train: 11038.4244  Val: 12343.1136
+  Epoch [ 3/10]  Train: 10993.1234  Val: 12343.4924
+  Epoch [ 4/10]  Train: 10985.6835  Val: 12344.3734
+  Epoch [ 5/10]  Train: 10982.0136  Val: 12345.9702
+  Epoch [ 6/10]  Train: 11007.5297  Val: 12336.5632
+  Epoch [ 7/10]  Train: 11009.9122  Val: 12335.0056
+  Epoch [ 8/10]  Train: 10866.4966  Val: 12265.3052
+  Epoch [ 9/10]  Train: 10758.1292  Val: 12169.6983
+  Epoch [10/10]  Train: 10455.7693  Val: 12104.0479
+  Model -> runs/models/A_nav_nonorm.pth  (3.3s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 5,000 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0012  Val: 1.0013
+  Epoch [ 2/10]  Train: 1.0005  Val: 1.0002
+  Epoch [ 3/10]  Train: 1.0001  Val: 1.0000
+  Epoch [ 4/10]  Train: 1.0004  Val: 1.0010
+  Epoch [ 5/10]  Train: 1.0006  Val: 1.0009
+  Epoch [ 6/10]  Train: 1.0001  Val: 1.0014
+  Epoch [ 7/10]  Train: 0.9995  Val: 1.0005
+  Epoch [ 8/10]  Train: 1.0024  Val: 1.0005
+  Epoch [ 9/10]  Train: 0.9989  Val: 1.0008
+  Epoch [10/10]  Train: 0.9997  Val: 1.0012
+  Model -> runs/models/B_nav_norm.pth  (2.0s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 60,000 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.8448  Val: 0.7195
+  Epoch [ 2/10]  Train: 0.6736  Val: 0.6185
+  Epoch [ 3/10]  Train: 0.5861  Val: 0.5288
+  Epoch [ 4/10]  Train: 0.5206  Val: 0.4646
+  Epoch [ 5/10]  Train: 0.4527  Val: 0.4155
+  Epoch [ 6/10]  Train: 0.4021  Val: 0.3549
+  Epoch [ 7/10]  Train: 0.3618  Val: 0.3338
+  Epoch [ 8/10]  Train: 0.3313  Val: 0.2881
+Traceback (most recent call last):
+  File "/mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/ml_pipeline.py", line 1001, in <module>
+    main()
+  File "/mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/ml_pipeline.py", line 979, in main
+    runs.append(step8_run_C(imu))
+                ^^^^^^^^^^^^^^^^
+  File "/mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/ml_pipeline.py", line 653, in step8_run_C
+    r = _train_run("C_imu_norm", imu, normalize=True,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/ml_pipeline.py", line 575, in _train_run
+    vl = sum(
+         ^^^^
+  File "/mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/ml_pipeline.py", line 576, in <genexpr>
+    crit(model(bx.to(device)), by.to(device)).item()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/nn/modules/loss.py", line 626, in forward
+    return F.mse_loss(input, target, reduction=self.reduction)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/nn/functional.py", line 3934, in mse_loss
+    expanded_input, expanded_target = torch.broadcast_tensors(input, target)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/functional.py", line 77, in broadcast_tensors
+    return _VF.broadcast_tensors(tensors)  # type: ignore[attr-defined]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/spyro/.local/lib/python3.12/site-packages/torch/_VF.py", line 27, in __getattr__
+    def __getattr__(self, name: str) -> object:
+
+KeyboardInterrupt
+
+══════════════════════════════════════════════════════════════════════
+  RUN #3  ·  2026-05-20 23:56:39
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=60000
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=  5,000  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  supplemental    rows=    552  cols=22  NaN=4.1%  IMU=✗  GPS=✗
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav  rows:  5,000 ->  5,000  NaN before:   0  after: 0
+  imu  rows: 60,000 -> 60,000  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0884    13.2690     0.0000     1.0000
+  imu_acc_y          -0.0452    13.0320    -0.0000     1.0000
+  imu_acc_z          -0.0141     4.4644     0.0000     1.0000
+  imu_gyro_x          1.2047    30.8272    -0.0000     1.0000
+  imu_gyro_y         -0.0982    30.0222     0.0000     1.0000
+  imu_gyro_z          1.2197    30.8165    -0.0000     1.0000
+  speed              16.4980    10.9911    -0.0000     1.0000
+  wind_speed          0.7725     3.1178    -0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (8): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'speed', 'wind_speed']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_z=0.009, imu_acc_y=0.008, imu_gyro_x=0.005
+    delta_lon: imu_acc_x=0.003, speed=0.002, imu_gyro_z=0.002
+    delta_alt: imu_gyro_x=0.019, wind_speed=0.008, speed=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,990
+  Input shape    : (10, 8)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 5,000 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11030.6029  Val: 12342.9232
+  Epoch [ 2/10]  Train: 11038.4244  Val: 12343.1136
+  Epoch [ 3/10]  Train: 10993.1234  Val: 12343.4924
+  Epoch [ 4/10]  Train: 10985.6835  Val: 12344.3734
+  Epoch [ 5/10]  Train: 10982.0136  Val: 12345.9702
+  Epoch [ 6/10]  Train: 11007.5297  Val: 12336.5632
+  Epoch [ 7/10]  Train: 11009.9122  Val: 12335.0056
+  Epoch [ 8/10]  Train: 10866.4966  Val: 12265.3052
+  Epoch [ 9/10]  Train: 10758.1292  Val: 12169.6983
+  Epoch [10/10]  Train: 10455.7693  Val: 12104.0479
+  Model -> runs/models/A_nav_nonorm.pth  (1.8s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 5,000 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0012  Val: 1.0013
+  Epoch [ 2/10]  Train: 1.0005  Val: 1.0002
+  Epoch [ 3/10]  Train: 1.0001  Val: 1.0000
+  Epoch [ 4/10]  Train: 1.0004  Val: 1.0010
+  Epoch [ 5/10]  Train: 1.0006  Val: 1.0009
+  Epoch [ 6/10]  Train: 1.0001  Val: 1.0014
+  Epoch [ 7/10]  Train: 0.9995  Val: 1.0005
+  Epoch [ 8/10]  Train: 1.0024  Val: 1.0005
+  Epoch [ 9/10]  Train: 0.9989  Val: 1.0008
+  Epoch [10/10]  Train: 0.9997  Val: 1.0012
+  Model -> runs/models/B_nav_norm.pth  (2.1s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 60,000 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.8448  Val: 0.7195
+  Epoch [ 2/10]  Train: 0.6736  Val: 0.6185
+  Epoch [ 3/10]  Train: 0.5861  Val: 0.5288
+  Epoch [ 4/10]  Train: 0.5206  Val: 0.4646
+  Epoch [ 5/10]  Train: 0.4527  Val: 0.4155
+  Epoch [ 6/10]  Train: 0.4021  Val: 0.3549
+  Epoch [ 7/10]  Train: 0.3618  Val: 0.3338
+  Epoch [ 8/10]  Train: 0.3313  Val: 0.2881
+  Epoch [ 9/10]  Train: 0.2976  Val: 0.2687
+  Epoch [10/10]  Train: 0.2812  Val: 0.2501
+  Model -> runs/models/C_imu_norm.pth  (24.2s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized  ← BEST
+══════════════════════════════════════════════════════════════════════
+
+  Config: 65,000 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.1587  Val: 0.3422
+  Epoch [ 2/10]  Train: 1.1544  Val: 0.3401
+  Epoch [ 3/10]  Train: 1.1524  Val: 0.3379
+  Epoch [ 4/10]  Train: 1.1502  Val: 0.3375
+  Epoch [ 5/10]  Train: 1.1495  Val: 0.3356
+  Epoch [ 6/10]  Train: 1.1481  Val: 0.3353
+  Epoch [ 7/10]  Train: 1.1471  Val: 0.3332
+  Epoch [ 8/10]  Train: 1.1457  Val: 0.3324
+  Epoch [ 9/10]  Train: 1.1437  Val: 0.3319
+  Epoch [10/10]  Train: 1.1426  Val: 0.3314
+  Model -> runs/models/D_nav_imu_norm.pth  (26.8s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: C_imu_norm  Val Loss=0.2501
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 75.0%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=12104.0479
+  B_nav_norm              Val Loss=1.0012
+  C_imu_norm              Val Loss=0.2501 ← BEST
+  D_nav_imu_norm          Val Loss=0.3314
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #4  ·  2026-05-21 00:14:47
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=  5,000  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_y=0.018, imu_gyro_x=0.017, imu_gyro_z=0.014
+    delta_lon: imu_acc_x=0.008, imu_gyro_z=0.005, imu_gyro_x=0.002
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+Traceback (most recent call last):
+  File "D:\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\ml_pipeline.py", line 1031, in <module>
+    main()
+    ~~~~^^
+  File "D:\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\ml_pipeline.py", line 1003, in main
+    step5_sequences(nav)
+    ~~~~~~~~~~~~~~~^^^^^
+  File "D:\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\ml_pipeline.py", line 476, in step5_sequences
+    ax = feature_axes[j]
+         ~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+══════════════════════════════════════════════════════════════════════
+  RUN #5  ·  2026-05-21 00:15:54
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_y=0.018, imu_gyro_x=0.017, imu_gyro_z=0.014
+    delta_lon: imu_acc_x=0.008, imu_gyro_z=0.005, imu_gyro_x=0.002
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11259.0242  Val: 11432.8833
+  Epoch [ 2/10]  Train: 11263.2840  Val: 11433.7252
+  Epoch [ 3/10]  Train: 11259.8390  Val: 11436.2841
+  Epoch [ 4/10]  Train: 11263.1453  Val: 11444.9855
+  Epoch [ 5/10]  Train: 11269.0264  Val: 11450.9952
+  Epoch [ 6/10]  Train: 11254.9727  Val: 11459.4830
+  Epoch [ 7/10]  Train: 11269.3576  Val: 11462.5034
+  Epoch [ 8/10]  Train: 11194.9176  Val: 11490.9756
+  Epoch [ 9/10]  Train: 11189.5764  Val: 11469.4432
+  Epoch [10/10]  Train: 11064.3110  Val: 11453.1951
+  Model -> runs/models/A_nav_nonorm.pth  (2.5s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0002  Val: 1.0096
+  Epoch [ 2/10]  Train: 0.9995  Val: 1.0095
+  Epoch [ 3/10]  Train: 0.9981  Val: 1.0104
+  Epoch [ 4/10]  Train: 0.9985  Val: 1.0098
+  Epoch [ 5/10]  Train: 0.9964  Val: 1.0109
+  Epoch [ 6/10]  Train: 0.9984  Val: 1.0103
+  Epoch [ 7/10]  Train: 0.9967  Val: 1.0102
+  Epoch [ 8/10]  Train: 0.9952  Val: 1.0104
+  Epoch [ 9/10]  Train: 0.9982  Val: 1.0113
+  Epoch [10/10]  Train: 0.9978  Val: 1.0107
+  Model -> runs/models/B_nav_norm.pth  (2.6s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.6977  Val: 0.5950
+  Epoch [ 2/10]  Train: 0.4999  Val: 0.4130
+  Epoch [ 3/10]  Train: 0.4005  Val: 0.3428
+  Epoch [ 4/10]  Train: 0.3495  Val: 0.2962
+  Epoch [ 5/10]  Train: 0.3191  Val: 0.2878
+  Epoch [ 6/10]  Train: 0.2941  Val: 0.2533
+  Epoch [ 7/10]  Train: 0.2766  Val: 0.2475
+  Epoch [ 8/10]  Train: 0.2616  Val: 0.2550
+  Epoch [ 9/10]  Train: 0.2497  Val: 0.2125
+  Epoch [10/10]  Train: 0.2380  Val: 0.2058
+  Model -> runs/models/C_imu_norm.pth  (289.8s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized  ← BEST
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0724  Val: 0.4225
+  Epoch [ 2/10]  Train: 1.0248  Val: 0.3842
+  Epoch [ 3/10]  Train: 1.0017  Val: 0.3675
+  Epoch [ 4/10]  Train: 0.9836  Val: 0.3560
+  Epoch [ 5/10]  Train: 0.9712  Val: 0.3429
+  Epoch [ 6/10]  Train: 0.9647  Val: 0.3429
+  Epoch [ 7/10]  Train: 0.9596  Val: 0.3373
+  Epoch [ 8/10]  Train: 0.9560  Val: 0.3346
+  Epoch [ 9/10]  Train: 0.9533  Val: 0.3329
+  Epoch [10/10]  Train: 0.9520  Val: 0.3288
+  Model -> runs/models/D_nav_imu_norm.pth  (297.2s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: C_imu_norm  Val Loss=0.2058
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 79.6%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=11453.1951
+  B_nav_norm              Val Loss=1.0107
+  C_imu_norm              Val Loss=0.2058 ← BEST
+  D_nav_imu_norm          Val Loss=0.3288
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #6  ·  2026-05-21 00:48:40
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_y=0.018, imu_gyro_x=0.017, imu_gyro_z=0.014
+    delta_lon: imu_acc_x=0.008, imu_gyro_z=0.005, imu_gyro_x=0.002
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11259.0242  Val: 11432.8833
+  Epoch [ 2/10]  Train: 11263.2840  Val: 11433.7252
+  Epoch [ 3/10]  Train: 11259.8390  Val: 11436.2840
+  Epoch [ 4/10]  Train: 11263.1452  Val: 11444.9857
+  Epoch [ 5/10]  Train: 11269.0267  Val: 11450.9951
+  Epoch [ 6/10]  Train: 11254.9779  Val: 11459.8829
+  Epoch [ 7/10]  Train: 11268.8670  Val: 11464.4467
+  Epoch [ 8/10]  Train: 11192.2937  Val: 11492.3349
+  Epoch [ 9/10]  Train: 11168.3009  Val: 11482.5801
+  Epoch [10/10]  Train: 11091.9335  Val: 11451.3324
+  Model -> runs/models/A_nav_nonorm.pth  (3.2s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0002  Val: 1.0096
+  Epoch [ 2/10]  Train: 0.9995  Val: 1.0095
+  Epoch [ 3/10]  Train: 0.9981  Val: 1.0104
+  Epoch [ 4/10]  Train: 0.9985  Val: 1.0098
+  Epoch [ 5/10]  Train: 0.9964  Val: 1.0109
+  Epoch [ 6/10]  Train: 0.9984  Val: 1.0103
+  Epoch [ 7/10]  Train: 0.9967  Val: 1.0102
+  Epoch [ 8/10]  Train: 0.9952  Val: 1.0104
+  Epoch [ 9/10]  Train: 0.9982  Val: 1.0113
+  Epoch [10/10]  Train: 0.9978  Val: 1.0107
+  Model -> runs/models/B_nav_norm.pth  (1.9s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.6974  Val: 0.5870
+  Epoch [ 2/10]  Train: 0.4991  Val: 0.4077
+  Epoch [ 3/10]  Train: 0.3973  Val: 0.3349
+  Epoch [ 4/10]  Train: 0.3487  Val: 0.2908
+  Epoch [ 5/10]  Train: 0.3172  Val: 0.2908
+  Epoch [ 6/10]  Train: 0.2946  Val: 0.2605
+  Epoch [ 7/10]  Train: 0.2774  Val: 0.2486
+  Epoch [ 8/10]  Train: 0.2622  Val: 0.2329
+  Epoch [ 9/10]  Train: 0.2493  Val: 0.2174
+  Epoch [10/10]  Train: 0.2384  Val: 0.2264
+  Model -> runs/models/C_imu_norm.pth  (232.4s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized  ← BEST
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0724  Val: 0.4223
+  Epoch [ 2/10]  Train: 1.0253  Val: 0.3857
+  Epoch [ 3/10]  Train: 1.0023  Val: 0.3679
+  Epoch [ 4/10]  Train: 0.9864  Val: 0.3577
+  Epoch [ 5/10]  Train: 0.9728  Val: 0.3465
+  Epoch [ 6/10]  Train: 0.9665  Val: 0.3386
+  Epoch [ 7/10]  Train: 0.9613  Val: 0.3354
+  Epoch [ 8/10]  Train: 0.9571  Val: 0.3335
+  Epoch [ 9/10]  Train: 0.9542  Val: 0.3313
+  Epoch [10/10]  Train: 0.9527  Val: 0.3325
+  Model -> runs/models/D_nav_imu_norm.pth  (246.8s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: C_imu_norm  Val Loss=0.2264
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 77.6%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json  (run_6 appended)
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=11451.3324
+  B_nav_norm              Val Loss=1.0107
+  C_imu_norm              Val Loss=0.2264 ← BEST
+  D_nav_imu_norm          Val Loss=0.3325
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #7  ·  2026-05-21 01:28:53
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_y=0.018, imu_gyro_x=0.017, imu_gyro_z=0.014
+    delta_lon: imu_acc_x=0.008, imu_gyro_z=0.005, imu_gyro_x=0.002
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  IMU sequences  : 544,753  (used for visualization - has all 14 features)
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11259.0242  Val: 11432.8833
+  Epoch [ 2/10]  Train: 11263.2840  Val: 11433.7252
+  Epoch [ 3/10]  Train: 11259.8390  Val: 11436.2840
+  Epoch [ 4/10]  Train: 11263.1452  Val: 11444.9857
+  Epoch [ 5/10]  Train: 11269.0267  Val: 11450.9951
+  Epoch [ 6/10]  Train: 11254.9779  Val: 11459.8829
+  Epoch [ 7/10]  Train: 11268.8670  Val: 11464.4467
+  Epoch [ 8/10]  Train: 11192.2937  Val: 11492.3349
+  Epoch [ 9/10]  Train: 11168.3009  Val: 11482.5801
+  Epoch [10/10]  Train: 11091.9335  Val: 11451.3324
+  Model -> runs/models/A_nav_nonorm.pth  (3.2s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0002  Val: 1.0096
+  Epoch [ 2/10]  Train: 0.9995  Val: 1.0095
+  Epoch [ 3/10]  Train: 0.9981  Val: 1.0104
+  Epoch [ 4/10]  Train: 0.9985  Val: 1.0098
+  Epoch [ 5/10]  Train: 0.9964  Val: 1.0109
+  Epoch [ 6/10]  Train: 0.9984  Val: 1.0103
+  Epoch [ 7/10]  Train: 0.9967  Val: 1.0102
+  Epoch [ 8/10]  Train: 0.9952  Val: 1.0104
+  Epoch [ 9/10]  Train: 0.9982  Val: 1.0113
+  Epoch [10/10]  Train: 0.9978  Val: 1.0107
+  Model -> runs/models/B_nav_norm.pth  (1.9s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.6974  Val: 0.5870
+  Epoch [ 2/10]  Train: 0.4991  Val: 0.4077
+  Epoch [ 3/10]  Train: 0.3973  Val: 0.3349
+  Epoch [ 4/10]  Train: 0.3487  Val: 0.2908
+  Epoch [ 5/10]  Train: 0.3172  Val: 0.2908
+  Epoch [ 6/10]  Train: 0.2946  Val: 0.2605
+  Epoch [ 7/10]  Train: 0.2774  Val: 0.2486
+  Epoch [ 8/10]  Train: 0.2622  Val: 0.2329
+  Epoch [ 9/10]  Train: 0.2493  Val: 0.2174
+  Epoch [10/10]  Train: 0.2384  Val: 0.2264
+  Model -> runs/models/C_imu_norm.pth  (213.2s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0724  Val: 0.4223
+  Epoch [ 2/10]  Train: 1.0253  Val: 0.3857
+  Epoch [ 3/10]  Train: 1.0023  Val: 0.3679
+  Epoch [ 4/10]  Train: 0.9864  Val: 0.3577
+  Epoch [ 5/10]  Train: 0.9728  Val: 0.3465
+  Epoch [ 6/10]  Train: 0.9665  Val: 0.3386
+  Epoch [ 7/10]  Train: 0.9613  Val: 0.3354
+  Epoch [ 8/10]  Train: 0.9571  Val: 0.3335
+  Epoch [ 9/10]  Train: 0.9542  Val: 0.3313
+  Epoch [10/10]  Train: 0.9527  Val: 0.3325
+  Model -> runs/models/D_nav_imu_norm.pth  (210.3s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: C_imu_norm  Val Loss=0.2264
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 77.6%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json  (run_7 appended)
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=11451.3324
+  B_nav_norm              Val Loss=1.0107
+  C_imu_norm              Val Loss=0.2264 ← BEST
+  D_nav_imu_norm          Val Loss=0.3325
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #8  ·  2026-07-23 13:07:34
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_acc_y=0.018, imu_gyro_x=0.017, imu_gyro_z=0.014
+    delta_lon: imu_acc_x=0.008, imu_gyro_z=0.005, imu_gyro_x=0.002
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  IMU sequences  : 544,753  (used for visualization - has all 14 features)
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 11398.3472  Val: 10812.6418
+  Epoch [ 2/10]  Train: 11374.1755  Val: 10812.6242
+  Epoch [ 3/10]  Train: 11410.5251  Val: 10812.6476
+  Epoch [ 4/10]  Train: 11411.3581  Val: 10812.7135
+  Epoch [ 5/10]  Train: 11467.5240  Val: 10812.7686
+  Epoch [ 6/10]  Train: 11410.6347  Val: 10813.7403
+  Epoch [ 7/10]  Train: 11350.7974  Val: 10884.3733
+  Epoch [ 8/10]  Train: 11304.9170  Val: 10966.9607
+  Epoch [ 9/10]  Train: 11179.7811  Val: 10969.4914
+  Epoch [10/10]  Train: 10991.6524  Val: 11148.3790
+  Model -> runs/models/A_nav_nonorm.pth  (2.7s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.0121  Val: 0.9624
+  Epoch [ 2/10]  Train: 1.0103  Val: 0.9625
+  Epoch [ 3/10]  Train: 1.0109  Val: 0.9624
+  Epoch [ 4/10]  Train: 1.0086  Val: 0.9624
+  Epoch [ 5/10]  Train: 1.0094  Val: 0.9628
+  Epoch [ 6/10]  Train: 1.0098  Val: 0.9624
+  Epoch [ 7/10]  Train: 1.0079  Val: 0.9624
+  Epoch [ 8/10]  Train: 1.0103  Val: 0.9624
+  Epoch [ 9/10]  Train: 1.0094  Val: 0.9623
+  Epoch [10/10]  Train: 1.0087  Val: 0.9622
+  Model -> runs/models/B_nav_norm.pth  (2.6s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 0.6900  Val: 0.7445
+  Epoch [ 2/10]  Train: 0.4740  Val: 0.7287
+  Epoch [ 3/10]  Train: 0.3706  Val: 0.6880
+  Epoch [ 4/10]  Train: 0.3129  Val: 0.7153
+  Epoch [ 5/10]  Train: 0.2787  Val: 0.7337
+  Epoch [ 6/10]  Train: 0.2538  Val: 0.7344
+  Epoch [ 7/10]  Train: 0.2357  Val: 0.7222
+  Epoch [ 8/10]  Train: 0.2225  Val: 0.7242
+  Epoch [ 9/10]  Train: 0.2111  Val: 0.7420
+  Epoch [10/10]  Train: 0.2014  Val: 0.7466
+  Model -> runs/models/C_imu_norm.pth  (251.7s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+  Epoch [ 1/10]  Train: 1.1525  Val: 0.1433
+  Epoch [ 2/10]  Train: 1.1032  Val: 0.1289
+  Epoch [ 3/10]  Train: 1.0789  Val: 0.1306
+  Epoch [ 4/10]  Train: 1.0681  Val: 0.1196
+  Epoch [ 5/10]  Train: 1.0599  Val: 0.1097
+  Epoch [ 6/10]  Train: 1.0486  Val: 0.1097
+  Epoch [ 7/10]  Train: 1.0420  Val: 0.0949
+  Epoch [ 8/10]  Train: 1.0385  Val: 0.0866
+  Epoch [ 9/10]  Train: 1.0352  Val: 0.0909
+  Epoch [10/10]  Train: 1.0318  Val: 0.0669
+  Model -> runs/models/D_nav_imu_norm.pth  (243.8s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: D_nav_imu_norm  Val Loss=0.0669
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 93.0%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json  (run_8 appended)
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=11148.3790
+  B_nav_norm              Val Loss=0.9622
+  C_imu_norm              Val Loss=0.7466
+  D_nav_imu_norm          Val Loss=0.0669 ← BEST
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #9  ·  2026-07-23 14:02:20
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_gyro_z=0.008, imu_gyro_x=0.008, dt=0.002
+    delta_lon: imu_gyro_y=0.009, imu_gyro_x=0.004, dt=0.003
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  IMU sequences  : 544,753  (used for visualization - has all 14 features)
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 3,803 train / 951 val sequences  (window=10, features=14, normalized=False).
+  Epoch [ 1/10]  Train: 461852.7953  Val: 446617.6000
+  Epoch [ 2/10]  Train: 461912.7057  Val: 446617.7521
+  Epoch [ 3/10]  Train: 460862.5844  Val: 446618.1146
+  Epoch [ 4/10]  Train: 462408.8854  Val: 446619.7979
+  Epoch [ 5/10]  Train: 460949.6339  Val: 446621.3917
+  Epoch [ 6/10]  Train: 460462.5510  Val: 446642.2042
+  Epoch [ 7/10]  Train: 462000.8156  Val: 446732.0229
+  Epoch [ 8/10]  Train: 461808.6750  Val: 446861.8729
+  Epoch [ 9/10]  Train: 460315.3099  Val: 447858.6833
+  Epoch [10/10]  Train: 458583.0802  Val: 447521.2917
+  Model -> runs/models/A_nav_nonorm.pth  (2.6s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 3,803 train / 951 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 1.0030  Val: 0.9540
+  Epoch [ 2/10]  Train: 1.0013  Val: 0.9542
+  Epoch [ 3/10]  Train: 1.0018  Val: 0.9540
+  Epoch [ 4/10]  Train: 0.9996  Val: 0.9540
+  Epoch [ 5/10]  Train: 1.0004  Val: 0.9544
+  Epoch [ 6/10]  Train: 1.0007  Val: 0.9540
+  Epoch [ 7/10]  Train: 0.9988  Val: 0.9540
+  Epoch [ 8/10]  Train: 1.0012  Val: 0.9541
+  Epoch [ 9/10]  Train: 1.0004  Val: 0.9539
+  Epoch [10/10]  Train: 0.9997  Val: 0.9539
+  Model -> runs/models/B_nav_norm.pth  (2.6s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 0.6965  Val: 0.7442
+  Epoch [ 2/10]  Train: 0.4778  Val: 0.7322
+  Epoch [ 3/10]  Train: 0.3771  Val: 0.7114
+  Epoch [ 4/10]  Train: 0.3185  Val: 0.7189
+  Epoch [ 5/10]  Train: 0.2832  Val: 0.7262
+  Epoch [ 6/10]  Train: 0.2615  Val: 0.7056
+  Epoch [ 7/10]  Train: 0.2421  Val: 0.7111
+  Epoch [ 8/10]  Train: 0.2286  Val: 0.7300
+  Epoch [ 9/10]  Train: 0.2188  Val: 0.7546
+  Epoch [10/10]  Train: 0.2080  Val: 0.7348
+  Model -> runs/models/C_imu_norm.pth  (292.0s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 439,605 train / 109,902 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 1.0004  Val: 0.0001
+  Epoch [ 2/10]  Train: 1.0003  Val: 0.0001
+  Epoch [ 3/10]  Train: 1.0002  Val: 0.0004
+  Epoch [ 4/10]  Train: 1.0004  Val: 0.0000
+  Epoch [ 5/10]  Train: 1.0005  Val: 0.0000
+  Epoch [ 6/10]  Train: 1.0002  Val: 0.0002
+  Epoch [ 7/10]  Train: 1.0006  Val: 0.0000
+  Epoch [ 8/10]  Train: 1.0002  Val: 0.0003
+  Epoch [ 9/10]  Train: 1.0001  Val: 0.0000
+  Epoch [10/10]  Train: 1.0004  Val: 0.0000
+  Model -> runs/models/D_nav_imu_norm.pth  (295.8s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: D_nav_imu_norm  Val Loss=0.0000
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 100.0%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json  (run_9 appended)
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=447521.2917
+  B_nav_norm              Val Loss=0.9539
+  C_imu_norm              Val Loss=0.7348
+  D_nav_imu_norm          Val Loss=0.0000 ← BEST
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  RUN #10  ·  2026-08-04 15:34:51
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SD-UAV AI Recovery - Full ML Pipeline
+  epochs=10  batch=64  window=10  imu_max_rows=None
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  STEP  1 │ Dataset Audit - shapes, columns, NaN counts
+══════════════════════════════════════════════════════════════════════
+  nav             rows=  5,000  cols=15  NaN=0.0%  IMU=✓  GPS=✓
+  imu             rows=544,763  cols=16  NaN=0.0%  IMU=✓  GPS=✓
+  -> Saved figure: runs/figures/01_dataset_audit.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  2 │ Data Cleaning - ffill, fillna, column remapping
+══════════════════════════════════════════════════════════════════════
+  nav: dropped 236 obstacle-avoidance rows (4.7%)
+  nav  rows:  5,000 ->  4,764  NaN before:   0  after: 0
+  imu  rows: 544,763 -> 544,763  NaN before:   0  after: 0
+  IMU column remap applied: ['accel_x', 'accel_y', 'accel_z', 'gyro_x'] -> ...
+  -> Saved figure: runs/figures/02_data_cleaning.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  3 │ Normalization - StandardScaler before/after comparison
+══════════════════════════════════════════════════════════════════════
+  Feature           Raw mean    Raw std  Norm mean   Norm std
+  ----------------------------------------------------------
+  imu_acc_x          -0.0026    13.0198     0.0000     1.0000
+  imu_acc_y           0.0009    13.6144     0.0000     1.0000
+  imu_acc_z           0.0020     4.7091     0.0000     1.0000
+  imu_gyro_x          0.2164    22.0957    -0.0000     1.0000
+  imu_gyro_y          2.9495    23.6914    -0.0000     1.0000
+  imu_gyro_z          1.3942    25.2284    -0.0000     1.0000
+  roll                0.0225     1.6245     0.0000     1.0000
+  pitch               0.0279     0.6312     0.0000     1.0000
+  yaw                 0.0081     1.5851    -0.0000     1.0000
+  mag_x               0.0247     0.5350     0.0000     1.0000
+  mag_y              -0.0193     0.5384     0.0000     1.0000
+  mag_z              -0.1725     0.6260    -0.0000     1.0000
+  speed              15.0480    10.1475     0.0000     1.0000
+  dt                  0.0132     0.0993     0.0000     1.0000
+  -> Saved figure: runs/figures/03_normalization.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  4 │ Feature Engineering - features, targets, correlations
+══════════════════════════════════════════════════════════════════════
+  Features (14): ['imu_acc_x', 'imu_acc_y', 'imu_acc_z', 'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z', 'roll', 'pitch', 'yaw', 'mag_x', 'mag_y', 'mag_z', 'speed', 'dt']
+  Targets  (3):  ['delta_lat', 'delta_lon', 'delta_alt']
+  Strongest feature->target correlations:
+    delta_lat: imu_gyro_z=0.008, imu_gyro_x=0.008, dt=0.002
+    delta_lon: imu_gyro_y=0.009, imu_gyro_x=0.004, dt=0.003
+    delta_alt: imu_gyro_x=0.011, dt=0.003, imu_gyro_z=0.002
+  -> Saved figure: runs/figures/04_feature_correlations.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  5 │ Sequence Building - sliding-window visualization
+══════════════════════════════════════════════════════════════════════
+  Window size    : 10 timesteps
+  Nav sequences  : 4,754
+  IMU sequences  : 544,753  (used for visualization - has all 14 features)
+  Input shape    : (10, 14)  ->  (3,)
+  Example: reading rows 0–9 -> predicts delta at row 10
+  -> Saved figure: runs/figures/05_sequence_window.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  6 │ Run A - nav only, NO normalization  (baseline)
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=False  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 3,803 train / 951 val sequences  (window=10, features=14, normalized=False).
+  Epoch [ 1/10]  Train: 461852.7953  Val: 446617.6000
+  Epoch [ 2/10]  Train: 461912.7057  Val: 446617.7521
+  Epoch [ 3/10]  Train: 460862.5844  Val: 446618.1146
+  Epoch [ 4/10]  Train: 462408.8854  Val: 446619.7979
+  Epoch [ 5/10]  Train: 460949.6339  Val: 446621.3917
+  Epoch [ 6/10]  Train: 460462.5510  Val: 446642.2042
+  Epoch [ 7/10]  Train: 462000.8156  Val: 446732.0229
+  Epoch [ 8/10]  Train: 461808.6750  Val: 446861.8729
+  Epoch [ 9/10]  Train: 460315.3099  Val: 447858.6833
+  Epoch [10/10]  Train: 458583.0802  Val: 447521.2917
+  Model -> runs/models/A_nav_nonorm.pth  (2.2s)
+  -> Saved figure: runs/figures/06_runA_nav_nonorm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  7 │ Run B - nav only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 4,764 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 3,803 train / 951 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 1.0030  Val: 0.9540
+  Epoch [ 2/10]  Train: 1.0013  Val: 0.9542
+  Epoch [ 3/10]  Train: 1.0018  Val: 0.9540
+  Epoch [ 4/10]  Train: 0.9996  Val: 0.9540
+  Epoch [ 5/10]  Train: 1.0004  Val: 0.9544
+  Epoch [ 6/10]  Train: 1.0007  Val: 0.9540
+  Epoch [ 7/10]  Train: 0.9988  Val: 0.9540
+  Epoch [ 8/10]  Train: 1.0012  Val: 0.9541
+  Epoch [ 9/10]  Train: 1.0004  Val: 0.9539
+  Epoch [10/10]  Train: 0.9997  Val: 0.9539
+  Model -> runs/models/B_nav_norm.pth  (2.5s)
+  -> Saved figure: runs/figures/07_runB_nav_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  8 │ Run C - imu only, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 544,763 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 0.6965  Val: 0.7442
+  Epoch [ 2/10]  Train: 0.4778  Val: 0.7322
+  Epoch [ 3/10]  Train: 0.3771  Val: 0.7114
+  Epoch [ 4/10]  Train: 0.3185  Val: 0.7189
+  Epoch [ 5/10]  Train: 0.2832  Val: 0.7262
+  Epoch [ 6/10]  Train: 0.2615  Val: 0.7056
+  Epoch [ 7/10]  Train: 0.2421  Val: 0.7111
+  Epoch [ 8/10]  Train: 0.2286  Val: 0.7300
+  Epoch [ 9/10]  Train: 0.2188  Val: 0.7546
+  Epoch [10/10]  Train: 0.2080  Val: 0.7348
+  Model -> runs/models/C_imu_norm.pth  (248.6s)
+  -> Saved figure: runs/figures/08_runC_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP  9 │ Run D - nav + imu combined, normalized
+══════════════════════════════════════════════════════════════════════
+
+  Config: 549,527 rows  normalize=True  epochs=10  batch=64
+Creating Dead Reckoning sequences...
+  Created 439,605 train / 109,902 val sequences  (window=10, features=14, normalized=True).
+  Epoch [ 1/10]  Train: 1.0004  Val: 0.0001
+  Epoch [ 2/10]  Train: 1.0003  Val: 0.0001
+  Epoch [ 3/10]  Train: 1.0002  Val: 0.0004
+  Epoch [ 4/10]  Train: 1.0004  Val: 0.0000
+  Epoch [ 5/10]  Train: 1.0005  Val: 0.0000
+  Epoch [ 6/10]  Train: 1.0002  Val: 0.0002
+  Epoch [ 7/10]  Train: 1.0006  Val: 0.0000
+  Epoch [ 8/10]  Train: 1.0002  Val: 0.0003
+  Epoch [ 9/10]  Train: 1.0001  Val: 0.0000
+  Epoch [10/10]  Train: 1.0004  Val: 0.0000
+  Model -> runs/models/D_nav_imu_norm.pth  (252.3s)
+  -> Saved figure: runs/figures/09_runD_nav_imu_norm.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 10 │ All-Runs Comparison - Val Loss curves + final bar chart
+══════════════════════════════════════════════════════════════════════
+  -> Saved figure: runs/figures/10_comparison_all_runs.png
+
+  Winner: C_imu_norm  Val Loss=0.7348
+  Improvement vs Run A (no-norm baseline) : 100.0%
+  Improvement vs Run B (nav-norm baseline): 23.0%
+
+══════════════════════════════════════════════════════════════════════
+  STEP 11 │ RL Path Recovery - Rule-Based vs PPO Agent
+══════════════════════════════════════════════════════════════════════
+  Rule-Based  Success=100.0%  Avg Steps=39.9
+  RL Agent    Success=28.0%  Avg Steps=158.45
+  -> Saved figure: runs/figures/11_rl_evaluation.png
+
+══════════════════════════════════════════════════════════════════════
+  STEP 12 │ Final Summary - results.json + summary figure
+══════════════════════════════════════════════════════════════════════
+  -> Saved: runs/results.json  (run_10 appended)
+  -> Saved figure: runs/figures/12_summary_dashboard.png
+
+══════════════════════════════════════════════════════════════════════
+  PIPELINE COMPLETE
+══════════════════════════════════════════════════════════════════════
+  A_nav_nonorm            Val Loss=447521.2917
+  B_nav_norm              Val Loss=0.9539
+  C_imu_norm              Val Loss=0.7348 ← BEST
+  D_nav_imu_norm          Val Loss=0.0000
+
+  Results JSON : runs/results.json
+  Figures      : runs/figures/  (12 files)
+  Models       : runs/models/   (4 files)
+══════════════════════════════════════════════════════════════════════

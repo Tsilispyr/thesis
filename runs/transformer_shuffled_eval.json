@@ -1,0 +1,17 @@
+{
+  "tag": "imu_norm_shuffled",
+  "permutation": [
+    8,
+    1,
+    5,
+    0,
+    7,
+    2,
+    9,
+    4,
+    3,
+    6
+  ],
+  "final_error_m": 9.779370332828538,
+  "mean_error_m": 7.236300213312591
+}

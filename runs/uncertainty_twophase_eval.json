@@ -1,0 +1,33 @@
+{
+  "tag": "imu_norm_twophase",
+  "final_error_m": 38.49245927573464,
+  "mean_error_m": 22.392211155439,
+  "calibration_pearson_r": 0.19900002777980053,
+  "calibration_bins": [
+    {
+      "n": 600,
+      "mean_pred_std": 0.03201086113099052,
+      "mean_actual_error": 10.966592009413432
+    },
+    {
+      "n": 600,
+      "mean_pred_std": 0.032764298985834446,
+      "mean_actual_error": 21.21837789943417
+    },
+    {
+      "n": 600,
+      "mean_pred_std": 0.0338622954231622,
+      "mean_actual_error": 23.763552082260222
+    },
+    {
+      "n": 600,
+      "mean_pred_std": 0.04412067895593847,
+      "mean_actual_error": 27.514929041356996
+    },
+    {
+      "n": 600,
+      "mean_pred_std": 0.06651037034888586,
+      "mean_actual_error": 28.49760474473017
+    }
+  ]
+}

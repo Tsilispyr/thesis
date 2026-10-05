@@ -1,0 +1,10 @@
+{
+  "seed": 4,
+  "patience": 10,
+  "isolated_process": true,
+  "best_epoch": 3,
+  "best_val_loss": 0.7200232592202981,
+  "epochs_run": 13,
+  "final_error_m": 27.0397906653204,
+  "mean_error_m": 16.66120487583289
+}

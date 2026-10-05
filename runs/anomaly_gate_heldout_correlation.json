@@ -1,0 +1,16 @@
+{
+  "held_out_agreement": {
+    "n_iso_flagged": 53,
+    "n_pca_flagged": 154,
+    "n_both": 14,
+    "n_only_iso": 39,
+    "n_only_pca": 140,
+    "jaccard_index": 0.07253886010362694
+  },
+  "iso_n_flagged": 53,
+  "pca_n_flagged": 154,
+  "iso_mean_error_flagged": 19.90998343954995,
+  "iso_mean_error_unflagged": 16.471928953623824,
+  "pca_mean_error_flagged": 17.821686030925935,
+  "pca_mean_error_unflagged": 16.46291781442831
+}

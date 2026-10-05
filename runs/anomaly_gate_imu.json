@@ -1,0 +1,13 @@
+{
+  "sources": [
+    "imu"
+  ],
+  "agreement": {
+    "n_iso_flagged": 1027,
+    "n_pca_flagged": 1414,
+    "n_both": 108,
+    "n_only_iso": 919,
+    "n_only_pca": 1306,
+    "jaccard_index": 0.04629232747535362
+  }
+}

@@ -1,0 +1,39 @@
+C:\Users\spyro\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\base.py:442: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+Resumed from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\dr_lstm_imu_norm_ablation_seed4.pth
+Starting point: epoch 30 of the original run, best_val=0.6846 (still improving when that run's fixed epoch budget ended).
+Epoch [  1] (continuing past original epoch 30)  Train: 0.1979  Val: 0.7150  LR: 1.00e-03
+Epoch [  2] (continuing past original epoch 30)  Train: 0.1886  Val: 0.7366  LR: 1.00e-03
+Epoch [  3] (continuing past original epoch 30)  Train: 0.1819  Val: 0.7421  LR: 1.00e-03
+Epoch [  4] (continuing past original epoch 30)  Train: 0.1765  Val: 0.7447  LR: 5.00e-04
+Epoch [  5] (continuing past original epoch 30)  Train: 0.1345  Val: 0.7122  LR: 5.00e-04
+Early stopping: no val improvement for 5 epochs (best val=0.6846).
+
+Continued training done in 401.6s.
+No improvement found beyond the original seed-4 checkpoint -- it had, in fact, already converged; keeping it unchanged.
+
+=== Evaluating continued model on the real chained-trajectory segment ===
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Continued model:  final=24.78m  mean=15.86m  max=38.18m
+Saved continued model -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\dr_lstm_imu_norm_lstm_continued.pth
+
+=== Evaluating the CURRENT production model, fresh, for comparison ===
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Current production dr_lstm_imu_norm.pth:  final=26.34m  mean=16.53m  max=36.85m
+
+Model                              Final [m]    Mean [m]     Max [m]
+Current production                     26.34       16.53       36.85
+Continued (from seed4)                 24.78       15.86       38.18
+
+PROMOTING: continued model beats current production (24.78m < 26.34m) on the real chained-trajectory metric. Overwriting dr_lstm_imu_norm.pth.
+Backed up outgoing production checkpoint with tag 'imu_norm_pre_seed4_continuation'.
+Promoted. dr_lstm_imu_norm.pth is now the continued-from-seed4 model.

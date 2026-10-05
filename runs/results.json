@@ -1,0 +1,2370 @@
+{
+  "run_5": {
+    "timestamp": "2026-05-21T00:15:54",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_acc_y": 0.0181,
+          "imu_gyro_x": 0.0173,
+          "imu_gyro_z": 0.0136
+        },
+        "delta_lon": {
+          "imu_acc_x": 0.0078,
+          "imu_gyro_z": 0.0052,
+          "imu_gyro_x": 0.0024
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        11259.024219,
+        11263.28396,
+        11259.839038,
+        11263.145256,
+        11269.026383,
+        11254.972689,
+        11269.357593,
+        11194.917635,
+        11189.576392,
+        11064.311019
+      ],
+      "val_losses": [
+        11432.883333,
+        11433.725195,
+        11436.284115,
+        11444.985547,
+        11450.995247,
+        11459.483008,
+        11462.503385,
+        11490.975586,
+        11469.443229,
+        11453.195052
+      ],
+      "final_train": 11064.311019,
+      "final_val": 11453.195052,
+      "elapsed_s": 2.5
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.000158,
+        0.99954,
+        0.998093,
+        0.998453,
+        0.996409,
+        0.998449,
+        0.9967,
+        0.995179,
+        0.998155,
+        0.997755
+      ],
+      "val_losses": [
+        1.009641,
+        1.009492,
+        1.010444,
+        1.009845,
+        1.010855,
+        1.010266,
+        1.010236,
+        1.010421,
+        1.011346,
+        1.01069
+      ],
+      "final_train": 0.997755,
+      "final_val": 1.01069,
+      "elapsed_s": 2.6
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.697656,
+        0.499856,
+        0.400541,
+        0.349525,
+        0.319064,
+        0.294094,
+        0.276645,
+        0.261622,
+        0.249732,
+        0.237983
+      ],
+      "val_losses": [
+        0.595028,
+        0.412983,
+        0.342813,
+        0.296198,
+        0.287755,
+        0.253278,
+        0.247502,
+        0.254999,
+        0.212453,
+        0.205751
+      ],
+      "final_train": 0.237983,
+      "final_val": 0.205751,
+      "elapsed_s": 289.8
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549517,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.072385,
+        1.02481,
+        1.001679,
+        0.983578,
+        0.971171,
+        0.964699,
+        0.959561,
+        0.955997,
+        0.95334,
+        0.951974
+      ],
+      "val_losses": [
+        0.422459,
+        0.384168,
+        0.367505,
+        0.355968,
+        0.342913,
+        0.342863,
+        0.33726,
+        0.334635,
+        0.332883,
+        0.328836
+      ],
+      "final_train": 0.951974,
+      "final_val": 0.328836,
+      "elapsed_s": 297.2
+    },
+    "step10_comparison": {
+      "winner": "C_imu_norm",
+      "winner_val_loss": 0.205751,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 79.6
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from D:\\SAR\\latest\\SAR-SIMULATION\\AI_Recovery\\ai_backend\\models\\ppo_swarm_recovery.zip"
+    }
+  },
+  "run_6": {
+    "timestamp": "2026-05-21T00:57:07.390860",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_acc_y": 0.0181,
+          "imu_gyro_x": 0.0173,
+          "imu_gyro_z": 0.0136
+        },
+        "delta_lon": {
+          "imu_acc_x": 0.0078,
+          "imu_gyro_z": 0.0052,
+          "imu_gyro_x": 0.0024
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        11259.024219,
+        11263.28396,
+        11259.839038,
+        11263.14519,
+        11269.026668,
+        11254.977881,
+        11268.867049,
+        11192.293726,
+        11168.300887,
+        11091.933464
+      ],
+      "val_losses": [
+        11432.883333,
+        11433.725195,
+        11436.283984,
+        11444.985742,
+        11450.995117,
+        11459.882878,
+        11464.44668,
+        11492.334896,
+        11482.580143,
+        11451.332357
+      ],
+      "final_train": 11091.933464,
+      "final_val": 11451.332357,
+      "elapsed_s": 3.2
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.000158,
+        0.99954,
+        0.998093,
+        0.998453,
+        0.996409,
+        0.998449,
+        0.9967,
+        0.995179,
+        0.998155,
+        0.997755
+      ],
+      "val_losses": [
+        1.009641,
+        1.009492,
+        1.010444,
+        1.009845,
+        1.010855,
+        1.010266,
+        1.010236,
+        1.010421,
+        1.011346,
+        1.01069
+      ],
+      "final_train": 0.997755,
+      "final_val": 1.01069,
+      "elapsed_s": 1.9
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.697429,
+        0.499115,
+        0.3973,
+        0.348709,
+        0.317229,
+        0.294565,
+        0.277448,
+        0.262165,
+        0.249301,
+        0.238366
+      ],
+      "val_losses": [
+        0.587035,
+        0.407715,
+        0.334886,
+        0.290833,
+        0.290783,
+        0.260475,
+        0.248584,
+        0.232912,
+        0.217397,
+        0.226399
+      ],
+      "final_train": 0.238366,
+      "final_val": 0.226399,
+      "elapsed_s": 232.4
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549517,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.072388,
+        1.025339,
+        1.002314,
+        0.986362,
+        0.972808,
+        0.966462,
+        0.961302,
+        0.957142,
+        0.954156,
+        0.952717
+      ],
+      "val_losses": [
+        0.422272,
+        0.385689,
+        0.367873,
+        0.357748,
+        0.346484,
+        0.338621,
+        0.335425,
+        0.333491,
+        0.331327,
+        0.33248
+      ],
+      "final_train": 0.952717,
+      "final_val": 0.33248,
+      "elapsed_s": 246.8
+    },
+    "step10_comparison": {
+      "winner": "C_imu_norm",
+      "winner_val_loss": 0.226399,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 77.6
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from /mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/models/ppo_swarm_recovery.zip"
+    }
+  },
+  "run_7": {
+    "timestamp": "2026-05-21T01:36:25.248362",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_acc_y": 0.0181,
+          "imu_gyro_x": 0.0173,
+          "imu_gyro_z": 0.0136
+        },
+        "delta_lon": {
+          "imu_acc_x": 0.0078,
+          "imu_gyro_z": 0.0052,
+          "imu_gyro_x": 0.0024
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "imu_sequences": 544753,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        11259.024219,
+        11263.28396,
+        11259.839038,
+        11263.14519,
+        11269.026668,
+        11254.977881,
+        11268.867049,
+        11192.293726,
+        11168.300887,
+        11091.933464
+      ],
+      "val_losses": [
+        11432.883333,
+        11433.725195,
+        11436.283984,
+        11444.985742,
+        11450.995117,
+        11459.882878,
+        11464.44668,
+        11492.334896,
+        11482.580143,
+        11451.332357
+      ],
+      "final_train": 11091.933464,
+      "final_val": 11451.332357,
+      "elapsed_s": 3.2
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.000158,
+        0.99954,
+        0.998093,
+        0.998453,
+        0.996409,
+        0.998449,
+        0.9967,
+        0.995179,
+        0.998155,
+        0.997755
+      ],
+      "val_losses": [
+        1.009641,
+        1.009492,
+        1.010444,
+        1.009845,
+        1.010855,
+        1.010266,
+        1.010236,
+        1.010421,
+        1.011346,
+        1.01069
+      ],
+      "final_train": 0.997755,
+      "final_val": 1.01069,
+      "elapsed_s": 1.9
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.697429,
+        0.499115,
+        0.3973,
+        0.348709,
+        0.317229,
+        0.294565,
+        0.277448,
+        0.262165,
+        0.249301,
+        0.238366
+      ],
+      "val_losses": [
+        0.587035,
+        0.407715,
+        0.334886,
+        0.290833,
+        0.290783,
+        0.260475,
+        0.248584,
+        0.232912,
+        0.217397,
+        0.226399
+      ],
+      "final_train": 0.238366,
+      "final_val": 0.226399,
+      "elapsed_s": 213.2
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549517,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.072388,
+        1.025339,
+        1.002314,
+        0.986362,
+        0.972808,
+        0.966462,
+        0.961302,
+        0.957142,
+        0.954156,
+        0.952717
+      ],
+      "val_losses": [
+        0.422272,
+        0.385689,
+        0.367873,
+        0.357748,
+        0.346484,
+        0.338621,
+        0.335425,
+        0.333491,
+        0.331327,
+        0.33248
+      ],
+      "final_train": 0.952717,
+      "final_val": 0.33248,
+      "elapsed_s": 210.3
+    },
+    "step10_comparison": {
+      "winner": "C_imu_norm",
+      "winner_val_loss": 0.226399,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 77.6
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from /mnt/d/SAR/latest/SAR-SIMULATION/AI_Recovery/ai_backend/models/ppo_swarm_recovery.zip"
+    }
+  },
+  "run_8": {
+    "timestamp": "2026-07-23T13:16:13.378295",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_acc_y": 0.0181,
+          "imu_gyro_x": 0.0173,
+          "imu_gyro_z": 0.0136
+        },
+        "delta_lon": {
+          "imu_acc_x": 0.0078,
+          "imu_gyro_z": 0.0052,
+          "imu_gyro_x": 0.0024
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "imu_sequences": 544753,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        11398.347184,
+        11374.175545,
+        11410.525106,
+        11411.358146,
+        11467.523966,
+        11410.634733,
+        11350.797404,
+        11304.916968,
+        11179.781104,
+        10991.65245
+      ],
+      "val_losses": [
+        10812.641797,
+        10812.624186,
+        10812.647624,
+        10812.713509,
+        10812.76862,
+        10813.740332,
+        10884.373275,
+        10966.960677,
+        10969.491439,
+        11148.378971
+      ],
+      "final_train": 10991.65245,
+      "final_val": 11148.378971,
+      "elapsed_s": 2.7
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.012101,
+        1.010325,
+        1.010908,
+        1.008617,
+        1.009445,
+        1.009795,
+        1.007935,
+        1.010296,
+        1.009431,
+        1.008719
+      ],
+      "val_losses": [
+        0.962396,
+        0.962536,
+        0.962378,
+        0.962372,
+        0.962773,
+        0.962393,
+        0.962366,
+        0.962425,
+        0.962283,
+        0.962247
+      ],
+      "final_train": 1.008719,
+      "final_val": 0.962247,
+      "elapsed_s": 2.6
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.690031,
+        0.473971,
+        0.370629,
+        0.31292,
+        0.278704,
+        0.253846,
+        0.235723,
+        0.222521,
+        0.211094,
+        0.20141
+      ],
+      "val_losses": [
+        0.744454,
+        0.728688,
+        0.688029,
+        0.715291,
+        0.733722,
+        0.734375,
+        0.722164,
+        0.72416,
+        0.741992,
+        0.746616
+      ],
+      "final_train": 0.20141,
+      "final_val": 0.746616,
+      "elapsed_s": 251.7
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549517,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.152488,
+        1.103157,
+        1.078926,
+        1.068059,
+        1.059933,
+        1.048588,
+        1.042031,
+        1.038486,
+        1.035239,
+        1.031815
+      ],
+      "val_losses": [
+        0.143318,
+        0.128876,
+        0.130648,
+        0.11965,
+        0.109743,
+        0.109721,
+        0.094921,
+        0.086605,
+        0.090932,
+        0.066918
+      ],
+      "final_train": 1.031815,
+      "final_val": 0.066918,
+      "elapsed_s": 243.8
+    },
+    "step10_comparison": {
+      "winner": "D_nav_imu_norm",
+      "winner_val_loss": 0.066918,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 93.0
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from D:\\A-PROJECTS\\SAR\\latest\\SAR-SIMULATION\\AI_Recovery\\ai_backend\\models\\ppo_swarm_recovery.zip"
+    }
+  },
+  "run_9": {
+    "timestamp": "2026-07-23T14:12:29.733153",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_gyro_z": 0.0079,
+          "imu_gyro_x": 0.0076,
+          "dt": 0.0016
+        },
+        "delta_lon": {
+          "imu_gyro_y": 0.0087,
+          "imu_gyro_x": 0.0038,
+          "dt": 0.0032
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "imu_sequences": 544753,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        461852.795312,
+        461912.705729,
+        460862.584375,
+        462408.885417,
+        460949.633854,
+        460462.551042,
+        462000.815625,
+        461808.675,
+        460315.309896,
+        458583.080208
+      ],
+      "val_losses": [
+        446617.6,
+        446617.752083,
+        446618.114583,
+        446619.797917,
+        446621.391667,
+        446642.204167,
+        446732.022917,
+        446861.872917,
+        447858.683333,
+        447521.291667
+      ],
+      "final_train": 458583.080208,
+      "final_val": 447521.291667,
+      "elapsed_s": 2.6
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.003018,
+        1.001252,
+        1.001811,
+        0.999553,
+        1.000365,
+        1.000711,
+        0.998819,
+        1.001225,
+        1.000382,
+        0.999661
+      ],
+      "val_losses": [
+        0.954018,
+        0.954182,
+        0.953989,
+        0.95402,
+        0.954403,
+        0.954032,
+        0.954034,
+        0.954071,
+        0.953929,
+        0.95388
+      ],
+      "final_train": 0.999661,
+      "final_val": 0.95388,
+      "elapsed_s": 2.6
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.696463,
+        0.477752,
+        0.377078,
+        0.318473,
+        0.283188,
+        0.261507,
+        0.24212,
+        0.228582,
+        0.218794,
+        0.208005
+      ],
+      "val_losses": [
+        0.744221,
+        0.732198,
+        0.711399,
+        0.718913,
+        0.726197,
+        0.705618,
+        0.711148,
+        0.730002,
+        0.75458,
+        0.734793
+      ],
+      "final_train": 0.208005,
+      "final_val": 0.734793,
+      "elapsed_s": 292.0
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549507,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.00035,
+        1.000333,
+        1.000229,
+        1.000364,
+        1.000517,
+        1.000229,
+        1.000607,
+        1.000247,
+        1.000086,
+        1.00045
+      ],
+      "val_losses": [
+        0.00011,
+        0.000117,
+        0.00044,
+        3.5e-05,
+        7e-06,
+        0.000167,
+        3.3e-05,
+        0.00031,
+        2.1e-05,
+        3.7e-05
+      ],
+      "final_train": 1.00045,
+      "final_val": 3.7e-05,
+      "elapsed_s": 295.8
+    },
+    "step10_comparison": {
+      "winner": "D_nav_imu_norm",
+      "winner_val_loss": 3.7e-05,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 100.0
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from D:\\A-PROJECTS\\SAR\\latest\\SAR-SIMULATION\\AI_Recovery\\ai_backend\\models\\ppo_swarm_recovery.zip"
+    }
+  },
+  "run_10": {
+    "timestamp": "2026-08-04T15:43:34.280068",
+    "step1_audit": {
+      "nav": {
+        "rows": 5000,
+        "cols": 15,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "timestamp",
+          "latitude",
+          "longitude",
+          "altitude",
+          "imu_acc_x",
+          "imu_acc_y",
+          "imu_acc_z",
+          "imu_gyro_x",
+          "imu_gyro_y",
+          "imu_gyro_z",
+          "lidar_distance",
+          "speed",
+          "wind_speed",
+          "battery_level",
+          "obstacle_detected"
+        ]
+      },
+      "imu": {
+        "rows": 544763,
+        "cols": 16,
+        "nan_pct": 0.0,
+        "has_imu": true,
+        "has_gps": true,
+        "columns": [
+          "time",
+          "accel_x",
+          "accel_y",
+          "accel_z",
+          "gyro_x",
+          "gyro_y",
+          "gyro_z",
+          "mag_x",
+          "mag_y",
+          "mag_z",
+          "pos_x",
+          "pos_y",
+          "pos_z",
+          "roll",
+          "pitch",
+          "yaw"
+        ]
+      }
+    },
+    "step2_cleaning": {
+      "nav_rows_in": 5000,
+      "nav_rows_out": 4764,
+      "nav_nan_before": 0,
+      "nav_nan_after": 0,
+      "imu_rows_in": 544763,
+      "imu_rows_out": 544763,
+      "imu_nan_before": 0,
+      "imu_nan_after": 0,
+      "imu_renamed_cols": [
+        "accel_x",
+        "accel_y",
+        "accel_z",
+        "gyro_x",
+        "gyro_y",
+        "gyro_z",
+        "pos_x",
+        "pos_y",
+        "pos_z"
+      ]
+    },
+    "step3_normalization": {
+      "before": {
+        "imu_acc_x": {
+          "mean": -0.0026,
+          "std": 13.0198
+        },
+        "imu_acc_y": {
+          "mean": 0.0009,
+          "std": 13.6144
+        },
+        "imu_acc_z": {
+          "mean": 0.002,
+          "std": 4.7091
+        },
+        "imu_gyro_x": {
+          "mean": 0.2164,
+          "std": 22.0957
+        },
+        "imu_gyro_y": {
+          "mean": 2.9495,
+          "std": 23.6914
+        },
+        "imu_gyro_z": {
+          "mean": 1.3942,
+          "std": 25.2284
+        },
+        "roll": {
+          "mean": 0.0225,
+          "std": 1.6245
+        },
+        "pitch": {
+          "mean": 0.0279,
+          "std": 0.6312
+        },
+        "yaw": {
+          "mean": 0.0081,
+          "std": 1.5851
+        },
+        "mag_x": {
+          "mean": 0.0247,
+          "std": 0.535
+        },
+        "mag_y": {
+          "mean": -0.0193,
+          "std": 0.5384
+        },
+        "mag_z": {
+          "mean": -0.1725,
+          "std": 0.626
+        },
+        "speed": {
+          "mean": 15.048,
+          "std": 10.1475
+        },
+        "dt": {
+          "mean": 0.0132,
+          "std": 0.0993
+        }
+      },
+      "after": {
+        "imu_acc_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_acc_z": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "imu_gyro_x": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_y": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "imu_gyro_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "roll": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "pitch": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "yaw": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "mag_x": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_y": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "mag_z": {
+          "mean": -0.0,
+          "std": 1.0
+        },
+        "speed": {
+          "mean": 0.0,
+          "std": 1.0
+        },
+        "dt": {
+          "mean": 0.0,
+          "std": 1.0
+        }
+      },
+      "note": "StandardScaler: mean=0, std=1 per feature after transform"
+    },
+    "step4_features": {
+      "feature_cols": [
+        "imu_acc_x",
+        "imu_acc_y",
+        "imu_acc_z",
+        "imu_gyro_x",
+        "imu_gyro_y",
+        "imu_gyro_z",
+        "roll",
+        "pitch",
+        "yaw",
+        "mag_x",
+        "mag_y",
+        "mag_z",
+        "speed",
+        "dt"
+      ],
+      "target_cols": [
+        "delta_lat",
+        "delta_lon",
+        "delta_alt"
+      ],
+      "top_correlations": {
+        "delta_lat": {
+          "imu_gyro_z": 0.0079,
+          "imu_gyro_x": 0.0076,
+          "dt": 0.0016
+        },
+        "delta_lon": {
+          "imu_gyro_y": 0.0087,
+          "imu_gyro_x": 0.0038,
+          "dt": 0.0032
+        },
+        "delta_alt": {
+          "imu_gyro_x": 0.0106,
+          "dt": 0.0029,
+          "imu_gyro_z": 0.0016
+        }
+      }
+    },
+    "step5_sequences": {
+      "window_size": 10,
+      "nav_sequences": 4754,
+      "imu_sequences": 544753,
+      "input_shape": [
+        10,
+        14
+      ],
+      "output_shape": [
+        3
+      ]
+    },
+    "runA": {
+      "run_id": "A_nav_nonorm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": false,
+      "epochs": 10,
+      "train_losses": [
+        461852.795312,
+        461912.705729,
+        460862.584375,
+        462408.885417,
+        460949.633854,
+        460462.551042,
+        462000.815625,
+        461808.675,
+        460315.309896,
+        458583.080208
+      ],
+      "val_losses": [
+        446617.6,
+        446617.752083,
+        446618.114583,
+        446619.797917,
+        446621.391667,
+        446642.204167,
+        446732.022917,
+        446861.872917,
+        447858.683333,
+        447521.291667
+      ],
+      "final_train": 458583.080208,
+      "final_val": 447521.291667,
+      "elapsed_s": 2.2
+    },
+    "runB": {
+      "run_id": "B_nav_norm",
+      "rows": 4764,
+      "sequences": 4754,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.003018,
+        1.001252,
+        1.001811,
+        0.999553,
+        1.000365,
+        1.000711,
+        0.998819,
+        1.001225,
+        1.000382,
+        0.999661
+      ],
+      "val_losses": [
+        0.954018,
+        0.954182,
+        0.953989,
+        0.95402,
+        0.954403,
+        0.954032,
+        0.954034,
+        0.954071,
+        0.953929,
+        0.95388
+      ],
+      "final_train": 0.999661,
+      "final_val": 0.95388,
+      "elapsed_s": 2.5
+    },
+    "runC": {
+      "run_id": "C_imu_norm",
+      "rows": 544763,
+      "sequences": 544753,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        0.696463,
+        0.477752,
+        0.377078,
+        0.318473,
+        0.283188,
+        0.261507,
+        0.24212,
+        0.228582,
+        0.218794,
+        0.208005
+      ],
+      "val_losses": [
+        0.744221,
+        0.732198,
+        0.711399,
+        0.718913,
+        0.726197,
+        0.705618,
+        0.711148,
+        0.730002,
+        0.75458,
+        0.734793
+      ],
+      "final_train": 0.208005,
+      "final_val": 0.734793,
+      "elapsed_s": 248.6
+    },
+    "runD": {
+      "run_id": "D_nav_imu_norm",
+      "rows": 549527,
+      "sequences": 549507,
+      "normalize": true,
+      "epochs": 10,
+      "train_losses": [
+        1.00035,
+        1.000333,
+        1.000229,
+        1.000364,
+        1.000517,
+        1.000229,
+        1.000607,
+        1.000247,
+        1.000086,
+        1.00045
+      ],
+      "val_losses": [
+        0.00011,
+        0.000117,
+        0.00044,
+        3.5e-05,
+        7e-06,
+        0.000167,
+        3.3e-05,
+        0.00031,
+        2.1e-05,
+        3.7e-05
+      ],
+      "final_train": 1.00045,
+      "final_val": 3.7e-05,
+      "elapsed_s": 252.3
+    },
+    "step10_comparison": {
+      "winner": "C_imu_norm",
+      "winner_val_loss": 0.734793,
+      "improvement_pct_over_A_nonorm": 100.0,
+      "improvement_pct_over_B_nav_norm": 23.0
+    },
+    "step11_rl": {
+      "rule_based_success_pct": 100.0,
+      "rule_based_avg_steps": 39.9,
+      "rl_success_pct": 28.0,
+      "rl_avg_steps": 158.45,
+      "rl_note": "loaded from D:\\A-PROJECTS\\SAR\\latest\\SAR-SIMULATION\\AI_Recovery\\ai_backend\\models\\ppo_swarm_recovery.zip"
+    }
+  }
+}

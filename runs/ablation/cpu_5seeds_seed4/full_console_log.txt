@@ -1,0 +1,262 @@
+Run label: cpu_5seeds_seed4
+torch threads capped at 4
+Logging full console output -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\runs\ablation\cpu_5seeds_seed4\full_console_log.txt
+
+=== Ablation Matrix: seeds=[4] epochs=30 sources=('imu',) models=['LSTM', 'SSL-LSTM', 'Transformer', 'SSL-Transformer', 'RandomForest', 'GBT'] quick=False partial=True ===
+
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+--- LSTM, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+Starting Training  |  sources=['imu']  max_epochs=30  normalize=True  early_stopping_patience=5  batch_size=64
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+Epoch [ 1/30]  Train: 0.6935  Val: 0.7461  LR: 1.00e-03  <- best
+Epoch [ 2/30]  Train: 0.4903  Val: 0.7417  LR: 1.00e-03  <- best
+Epoch [ 3/30]  Train: 0.3836  Val: 0.7355  LR: 1.00e-03  <- best
+Epoch [ 4/30]  Train: 0.3227  Val: 0.7470  LR: 1.00e-03
+Epoch [ 5/30]  Train: 0.2846  Val: 0.7521  LR: 1.00e-03
+Epoch [ 6/30]  Train: 0.2584  Val: 0.7758  LR: 5.00e-04
+Epoch [ 7/30]  Train: 0.2056  Val: 0.7330  LR: 5.00e-04  <- best
+Epoch [ 8/30]  Train: 0.1939  Val: 0.7367  LR: 5.00e-04
+Epoch [ 9/30]  Train: 0.1862  Val: 0.7416  LR: 5.00e-04
+Epoch [10/30]  Train: 0.1799  Val: 0.7217  LR: 5.00e-04  <- best
+Epoch [11/30]  Train: 0.1741  Val: 0.7408  LR: 5.00e-04
+Epoch [12/30]  Train: 0.1702  Val: 0.7450  LR: 5.00e-04
+Epoch [13/30]  Train: 0.1660  Val: 0.7287  LR: 2.50e-04
+Epoch [14/30]  Train: 0.1461  Val: 0.7203  LR: 2.50e-04  <- best
+Epoch [15/30]  Train: 0.1437  Val: 0.7183  LR: 2.50e-04  <- best
+Epoch [16/30]  Train: 0.1419  Val: 0.7201  LR: 2.50e-04
+Epoch [17/30]  Train: 0.1398  Val: 0.7162  LR: 2.50e-04  <- best
+Epoch [18/30]  Train: 0.1381  Val: 0.7226  LR: 2.50e-04
+Epoch [19/30]  Train: 0.1365  Val: 0.6976  LR: 2.50e-04  <- best
+Epoch [20/30]  Train: 0.1350  Val: 0.7072  LR: 2.50e-04
+Epoch [21/30]  Train: 0.1335  Val: 0.7060  LR: 2.50e-04
+Epoch [22/30]  Train: 0.1325  Val: 0.7039  LR: 1.25e-04
+Epoch [23/30]  Train: 0.1236  Val: 0.6980  LR: 1.25e-04
+Epoch [24/30]  Train: 0.1225  Val: 0.6900  LR: 1.25e-04  <- best
+Epoch [25/30]  Train: 0.1216  Val: 0.7022  LR: 1.25e-04
+Epoch [26/30]  Train: 0.1208  Val: 0.6978  LR: 1.25e-04
+Epoch [27/30]  Train: 0.1203  Val: 0.6893  LR: 1.25e-04  <- best
+Epoch [28/30]  Train: 0.1195  Val: 0.6980  LR: 1.25e-04
+Epoch [29/30]  Train: 0.1189  Val: 0.6915  LR: 1.25e-04
+Epoch [30/30]  Train: 0.1181  Val: 0.6846  LR: 1.25e-04  <- best
+Training done in 3960.2s. Restored weights from epoch 30 (best val=0.6846).
+Model saved → D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\dr_lstm_imu_norm_ablation_seed4.pth
+Scalers saved → D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\scaler_X_imu_norm_ablation_seed4.pkl
+Training history saved → D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\history_imu_norm_ablation_seed4.json
+LSTM seed 4: final=24.78m mean=15.86m
+
+LSTM: final=24.78m [24.78, 24.78]  mean=15.86m [15.86, 15.86]  (3968.3s for 1 seed(s))
+
+--- SSL-LSTM, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+[SSL] Pretraining  |  sources=['imu']  max_epochs=30  mask_ratio=0.3  patience=4
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+[SSL] Epoch [ 1/30]  Train: 0.1836  Val: 0.1801  LR: 1.00e-03  <- best
+[SSL] Epoch [ 2/30]  Train: 0.1564  Val: 0.1765  LR: 1.00e-03  <- best
+[SSL] Epoch [ 3/30]  Train: 0.1522  Val: 0.1709  LR: 1.00e-03  <- best
+[SSL] Epoch [ 4/30]  Train: 0.1490  Val: 0.1647  LR: 1.00e-03  <- best
+[SSL] Epoch [ 5/30]  Train: 0.1469  Val: 0.1645  LR: 1.00e-03  <- best
+[SSL] Epoch [ 6/30]  Train: 0.1446  Val: 0.1634  LR: 1.00e-03  <- best
+[SSL] Epoch [ 7/30]  Train: 0.1431  Val: 0.1622  LR: 1.00e-03  <- best
+[SSL] Epoch [ 8/30]  Train: 0.1420  Val: 0.1603  LR: 1.00e-03  <- best
+[SSL] Epoch [ 9/30]  Train: 0.1409  Val: 0.1596  LR: 1.00e-03  <- best
+[SSL] Epoch [10/30]  Train: 0.1396  Val: 0.1607  LR: 1.00e-03
+[SSL] Epoch [11/30]  Train: 0.1386  Val: 0.1577  LR: 1.00e-03  <- best
+[SSL] Epoch [12/30]  Train: 0.1375  Val: 0.1581  LR: 1.00e-03
+[SSL] Epoch [13/30]  Train: 0.1370  Val: 0.1571  LR: 1.00e-03  <- best
+[SSL] Epoch [14/30]  Train: 0.1366  Val: 0.1583  LR: 1.00e-03
+[SSL] Epoch [15/30]  Train: 0.1358  Val: 0.1585  LR: 1.00e-03
+[SSL] Epoch [16/30]  Train: 0.1353  Val: 0.1596  LR: 5.00e-04
+[SSL] Epoch [17/30]  Train: 0.1340  Val: 0.1554  LR: 5.00e-04  <- best
+[SSL] Epoch [18/30]  Train: 0.1330  Val: 0.1572  LR: 5.00e-04
+[SSL] Epoch [19/30]  Train: 0.1335  Val: 0.1563  LR: 5.00e-04
+[SSL] Epoch [20/30]  Train: 0.1338  Val: 0.1568  LR: 2.50e-04
+[SSL] Epoch [21/30]  Train: 0.1326  Val: 0.1549  LR: 2.50e-04  <- best
+[SSL] Epoch [22/30]  Train: 0.1325  Val: 0.1536  LR: 2.50e-04  <- best
+[SSL] Epoch [23/30]  Train: 0.1322  Val: 0.1550  LR: 2.50e-04
+[SSL] Epoch [24/30]  Train: 0.1323  Val: 0.1551  LR: 2.50e-04
+[SSL] Epoch [25/30]  Train: 0.1322  Val: 0.1535  LR: 2.50e-04  <- best
+[SSL] Epoch [26/30]  Train: 0.1318  Val: 0.1540  LR: 2.50e-04
+[SSL] Epoch [27/30]  Train: 0.1316  Val: 0.1547  LR: 2.50e-04
+[SSL] Epoch [28/30]  Train: 0.1313  Val: 0.1544  LR: 1.25e-04
+[SSL] Epoch [29/30]  Train: 0.1314  Val: 0.1552  LR: 1.25e-04
+[SSL] Early stopping: no val improvement for 4 epochs (best epoch 25, val=0.1535).
+[SSL] Pretraining done in 2762.9s, restored epoch 25 (val=0.1535).
+
+[SSL] Fine-tuning for Δposition regression  |  sources=['imu']  max_epochs=30  patience=5
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+[SSL-finetune] Epoch [ 1/30]  Train: 0.6675  Val: 0.8090  LR: 1.00e-03  <- best
+[SSL-finetune] Epoch [ 2/30]  Train: 0.4592  Val: 0.8233  LR: 1.00e-03
+[SSL-finetune] Epoch [ 3/30]  Train: 0.3654  Val: 0.8468  LR: 1.00e-03
+[SSL-finetune] Epoch [ 4/30]  Train: 0.3135  Val: 0.8435  LR: 5.00e-04
+[SSL-finetune] Epoch [ 5/30]  Train: 0.2522  Val: 0.8194  LR: 5.00e-04
+[SSL-finetune] Epoch [ 6/30]  Train: 0.2364  Val: 0.8242  LR: 5.00e-04
+[SSL-finetune] Early stopping: no val improvement for 5 epochs (best epoch 1, val=0.8090).
+[SSL-finetune] Done in 585.4s, restored epoch 1 (val=0.8090).
+Saved SSL-pretrained encoder + fine-tuned model with tag 'imu_ssl_norm_ablation_seed4' -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\models
+SSL-LSTM seed 4: final=33.46m mean=20.70m
+
+SSL-LSTM: final=33.46m [33.46, 33.46]  mean=20.70m [20.70, 20.70]  (3360.6s for 1 seed(s))
+
+--- Transformer, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+Starting Transformer Training  |  sources=['imu']  max_epochs=30  normalize=True  early_stopping_patience=5  augmentation=True  batch_size=64
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+Epoch [ 1/30]  Train: 0.7932  Val: 0.5981  LR: 1.00e-03  <- best
+Epoch [ 2/30]  Train: 0.5751  Val: 0.4487  LR: 1.00e-03  <- best
+Epoch [ 3/30]  Train: 0.4976  Val: 0.4099  LR: 1.00e-03  <- best
+Epoch [ 4/30]  Train: 0.4551  Val: 0.3887  LR: 1.00e-03  <- best
+Epoch [ 5/30]  Train: 0.4287  Val: 0.3883  LR: 1.00e-03  <- best
+Epoch [ 6/30]  Train: 0.4098  Val: 0.3864  LR: 1.00e-03  <- best
+Epoch [ 7/30]  Train: 0.3965  Val: 0.3702  LR: 1.00e-03  <- best
+Epoch [ 8/30]  Train: 0.3852  Val: 0.3822  LR: 1.00e-03
+Epoch [ 9/30]  Train: 0.3750  Val: 0.3862  LR: 1.00e-03
+Epoch [10/30]  Train: 0.3687  Val: 0.3980  LR: 5.00e-04
+Epoch [11/30]  Train: 0.3371  Val: 0.3942  LR: 5.00e-04
+Epoch [12/30]  Train: 0.3305  Val: 0.4068  LR: 5.00e-04
+Early stopping: no val improvement for 5 epochs (best was epoch 7, val=0.3702).
+Training done in 3852.3s. Restored weights from epoch 7 (best val=0.3702).
+Model saved -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\dr_transformer_imu_norm_ablation_seed4.pth
+Scalers saved -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\scaler_X_transformer_imu_norm_ablation_seed4.pkl
+Training history saved -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\history_transformer_imu_norm_ablation_seed4.json
+Transformer seed 4: final=5.94m mean=6.30m
+
+Transformer: final=5.94m [5.94, 5.94]  mean=6.30m [6.30, 6.30]  (3862.8s for 1 seed(s))
+
+--- SSL-Transformer, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+[SSL-Transformer] Pretraining  |  sources=['imu']  max_epochs=30  mask_ratio=0.3  patience=4
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+[SSL-Transformer] Epoch [ 1/30]  Train: 0.0701  Val: 0.0390  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 2/30]  Train: 0.0446  Val: 0.0341  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 3/30]  Train: 0.0401  Val: 0.0312  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 4/30]  Train: 0.0374  Val: 0.0310  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 5/30]  Train: 0.0356  Val: 0.0279  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 6/30]  Train: 0.0343  Val: 0.0263  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 7/30]  Train: 0.0332  Val: 0.0262  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 8/30]  Train: 0.0325  Val: 0.0251  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [ 9/30]  Train: 0.0318  Val: 0.0248  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [10/30]  Train: 0.0313  Val: 0.0242  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [11/30]  Train: 0.0308  Val: 0.0234  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [12/30]  Train: 0.0305  Val: 0.0234  LR: 1.00e-03
+[SSL-Transformer] Epoch [13/30]  Train: 0.0301  Val: 0.0241  LR: 1.00e-03
+[SSL-Transformer] Epoch [14/30]  Train: 0.0297  Val: 0.0227  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [15/30]  Train: 0.0294  Val: 0.0241  LR: 1.00e-03
+[SSL-Transformer] Epoch [16/30]  Train: 0.0291  Val: 0.0235  LR: 1.00e-03
+[SSL-Transformer] Epoch [17/30]  Train: 0.0290  Val: 0.0225  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [18/30]  Train: 0.0287  Val: 0.0213  LR: 1.00e-03  <- best
+[SSL-Transformer] Epoch [19/30]  Train: 0.0286  Val: 0.0220  LR: 1.00e-03
+[SSL-Transformer] Epoch [20/30]  Train: 0.0283  Val: 0.0221  LR: 1.00e-03
+[SSL-Transformer] Epoch [21/30]  Train: 0.0280  Val: 0.0216  LR: 5.00e-04
+[SSL-Transformer] Epoch [22/30]  Train: 0.0265  Val: 0.0198  LR: 5.00e-04  <- best
+[SSL-Transformer] Epoch [23/30]  Train: 0.0261  Val: 0.0190  LR: 5.00e-04  <- best
+[SSL-Transformer] Epoch [24/30]  Train: 0.0259  Val: 0.0191  LR: 5.00e-04
+[SSL-Transformer] Epoch [25/30]  Train: 0.0258  Val: 0.0191  LR: 5.00e-04
+[SSL-Transformer] Epoch [26/30]  Train: 0.0256  Val: 0.0193  LR: 2.50e-04
+[SSL-Transformer] Epoch [27/30]  Train: 0.0250  Val: 0.0178  LR: 2.50e-04  <- best
+[SSL-Transformer] Epoch [28/30]  Train: 0.0247  Val: 0.0174  LR: 2.50e-04  <- best
+[SSL-Transformer] Epoch [29/30]  Train: 0.0246  Val: 0.0182  LR: 2.50e-04
+[SSL-Transformer] Epoch [30/30]  Train: 0.0247  Val: 0.0173  LR: 2.50e-04  <- best
+[SSL-Transformer] Pretraining done in 7933.5s, restored epoch 30 (val=0.0173).
+
+[SSL-Transformer] Fine-tuning for position-delta regression  |  sources=['imu']  max_epochs=30  patience=5
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+Device: cpu
+[SSL-Transformer-finetune] Epoch [ 1/30]  Train: 0.7305  Val: 0.6051  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 2/30]  Train: 0.5750  Val: 0.5367  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 3/30]  Train: 0.5115  Val: 0.4992  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 4/30]  Train: 0.4629  Val: 0.4340  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 5/30]  Train: 0.4216  Val: 0.4117  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 6/30]  Train: 0.4002  Val: 0.3822  LR: 1.00e-03  <- best
+[SSL-Transformer-finetune] Epoch [ 7/30]  Train: 0.3852  Val: 0.3826  LR: 1.00e-03
+[SSL-Transformer-finetune] Epoch [ 8/30]  Train: 0.3737  Val: 0.3852  LR: 1.00e-03
+[SSL-Transformer-finetune] Epoch [ 9/30]  Train: 0.3664  Val: 0.3901  LR: 5.00e-04
+[SSL-Transformer-finetune] Epoch [10/30]  Train: 0.3264  Val: 0.3744  LR: 5.00e-04  <- best
+[SSL-Transformer-finetune] Epoch [11/30]  Train: 0.3164  Val: 0.3855  LR: 5.00e-04
+[SSL-Transformer-finetune] Epoch [12/30]  Train: 0.3113  Val: 0.3877  LR: 5.00e-04
+[SSL-Transformer-finetune] Epoch [13/30]  Train: 0.3064  Val: 0.3853  LR: 2.50e-04
+[SSL-Transformer-finetune] Epoch [14/30]  Train: 0.2832  Val: 0.3911  LR: 2.50e-04
+[SSL-Transformer-finetune] Epoch [15/30]  Train: 0.2775  Val: 0.3925  LR: 2.50e-04
+[SSL-Transformer-finetune] Early stopping: no val improvement for 5 epochs (best epoch 10, val=0.3744).
+[SSL-Transformer-finetune] Done in 4698.6s, restored epoch 10 (val=0.3744).
+Saved SSL-pretrained Transformer trunk + fine-tuned model with tag 'imu_ssl_norm_ablation_seed4' -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\models
+SSL-Transformer seed 4: final=16.39m mean=9.35m
+
+SSL-Transformer: final=16.39m [16.39, 16.39]  mean=9.35m [9.35, 9.35]  (12646.0s for 1 seed(s))
+
+--- RandomForest, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+[RandomForest] Training  |  sources=['imu']  grid_search=True  n_jobs=8
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+[RandomForest] GridSearchCV (on 20000-row subsample) best params: {'max_depth': 20, 'n_estimators': 100}
+[RandomForest] Fit in 1397.0s (full 435802 rows). Val MSE: 0.6640
+[RandomForest] Saved model + scalers + info with tag 'imu_norm_ablation_seed4' -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models
+RandomForest seed 4: final=25.92m mean=17.05m
+
+RandomForest: final=25.92m [25.92, 25.92]  mean=17.05m [17.05, 17.05]  (1452.4s for 1 seed(s))
+
+--- GBT, seed 4 ---
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+
+[GBT] Training  |  sources=['imu']  grid_search=True  n_jobs=8
+Loading IMU Data from D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models\..\..\datasets\imu_data.csv...
+  Loaded 544763 records.
+Combined dataset: 544763 total records from ['imu'].
+Creating Dead Reckoning sequences...
+  Created 435,802 train / 108,951 val sequences  (window=10, features=14, normalized=True).
+[GBT] GridSearchCV (on 20000-row subsample, delta_lat proxy) best params: {'max_depth': None, 'max_iter': 100}
+[GBT] Fit in 25.9s (full 435802 rows). Val MSE: 0.3591
+[GBT] Saved model + scalers + info with tag 'imu_norm_ablation_seed4' -> D:\A-PROJECTS\SAR\latest\SAR-SIMULATION\AI_Recovery\ai_backend\models
+GBT seed 4: final=18.29m mean=11.72m
+
+GBT: final=18.29m [18.29, 18.29]  mean=11.72m [11.72, 11.72]  (183.3s for 1 seed(s))
+
+Partial run complete for seeds [4]. Checkpoints are cached under ai_backend/models/. No table/plot/results.json/README written -- those need every seed present. Once every seed 0..4 has been trained (across however many partial runs), aggregate them with:
+  python ai_backend/ablation_matrix.py --seeds 5 --run-label <label>
+which will find every seed already cached and complete almost instantly.

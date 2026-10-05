@@ -1,0 +1,76 @@
+{
+  "seeds": 2,
+  "epochs": 3,
+  "sources": [
+    "imu"
+  ],
+  "quick": true,
+  "results": {
+    "EKF": {
+      "seeds": null,
+      "per_seed": null,
+      "final_mean": 132.4734719365609,
+      "final_ci_low": null,
+      "final_ci_high": null,
+      "mean_mean": 66.11631483295172,
+      "mean_ci_low": null,
+      "mean_ci_high": null,
+      "deterministic": true
+    },
+    "Pure Inertial": {
+      "seeds": null,
+      "per_seed": null,
+      "final_mean": 142.99597564425787,
+      "final_ci_low": null,
+      "final_ci_high": null,
+      "mean_mean": 71.39058499498461,
+      "mean_ci_low": null,
+      "mean_ci_high": null,
+      "deterministic": true
+    },
+    "SSL-LSTM": {
+      "seeds": 2,
+      "per_seed": [
+        {
+          "final": 51.58519426441984,
+          "mean": 29.6958592469729,
+          "max": 58.3368815413204
+        },
+        {
+          "final": 34.21786802284384,
+          "mean": 21.374677739704417,
+          "max": 44.35620526192079
+        }
+      ],
+      "final_mean": 42.90153114363184,
+      "final_ci_low": 0.0,
+      "final_ci_high": 153.23793261856903,
+      "mean_mean": 25.53526849333866,
+      "mean_ci_low": 0.0,
+      "mean_ci_high": 78.40058643352164,
+      "deterministic": false
+    },
+    "Transformer": {
+      "seeds": 2,
+      "per_seed": [
+        {
+          "final": 15.691605550115703,
+          "mean": 11.05700039686401,
+          "max": 24.52095906802795
+        },
+        {
+          "final": 6.282234641302796,
+          "mean": 7.48566853826478,
+          "max": 20.647389923240294
+        }
+      ],
+      "final_mean": 10.98692009570925,
+      "final_ci_low": 0.0,
+      "final_ci_high": 70.76561669991172,
+      "mean_mean": 9.271334467564396,
+      "mean_ci_low": 0.0,
+      "mean_ci_high": 31.960371356116582,
+      "deterministic": false
+    }
+  }
+}
