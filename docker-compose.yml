@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  ai_backend:
+    build: ./ai_backend
+    ports:
+      - "14551:14551/udp" # UDP Incoming telemetry
+      - "14552:14552/udp" # UDP Outgoing commands
+    volumes:
+      - ./ai_backend:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python api/udp_server.py

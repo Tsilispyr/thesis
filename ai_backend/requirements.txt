@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pandas
+numpy
+torch
+scikit-learn
+joblib
+matplotlib
+websockets
+python-docx
+
+stable-baselines3
+gymnasium
+pyulog
+requests
